@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const VoitureContext = createContext()
 
@@ -31,6 +32,7 @@ export const VoitureProvider = ({ children }) => {
       .then((response) => {
         console.log('New car added:', response.data)
         fetchAll()
+        Swal.fire('Ajouté', response.data.designvoiture + ' ajouté avec succès', 'success')
       })
       .catch((error) => {
         console.error('Error adding new car:', error.message)
@@ -43,6 +45,7 @@ export const VoitureProvider = ({ children }) => {
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAll()
+        Swal.fire('Modifié', 'Modification avec succès', 'success')
       })
       .catch((error) => {
         console.error('Error updating client data:', error.message)
