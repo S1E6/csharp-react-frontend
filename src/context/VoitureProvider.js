@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useAchatContext } from './AchatProvider'
 
 const VoitureContext = createContext()
 
@@ -8,12 +9,13 @@ const VoitureContext = createContext()
 export const VoitureProvider = ({ children }) => {
   const [voitureData, setVoitureData] = useState([])
   const [records, setRecords] = useState([])
+  const { fetchAll } = useAchatContext()
 
   useEffect(() => {
-    fetchAll()
+    fetchAllCar()
   }, [])
 
-  const fetchAll = () => {
+  const fetchAllCar = () => {
     axios
       .get('https://localhost:7001/api/Voiture')
       .then((response) => {
@@ -31,11 +33,94 @@ export const VoitureProvider = ({ children }) => {
       .post('https://localhost:7001/api/Voiture', newVoiture)
       .then((response) => {
         console.log('New car added:', response.data)
-        fetchAll()
+        fetchAllCar()
         Swal.fire('Ajouté', response.data.designvoiture + ' ajouté avec succès', 'success')
       })
       .catch((error) => {
         console.error('Error adding new car:', error.message)
+      })
+  }
+
+  const addVoitureNewCategorie = (newVoiture) => {
+    axios
+      .post('https://localhost:7001/api/Categorie', newVoiture.categorie)
+      .then((response) => {
+        console.log('New category added:', response.data)
+        newVoiture.categorie.idcategorie = response.data.idcategorie
+        newVoiture.categorie.designcat = response.data.designcat
+
+        axios
+          .post('https://localhost:7001/api/Voiture', newVoiture)
+          .then((response) => {
+            console.log('New car added:', response.data)
+            fetchAllCar()
+            Swal.fire('Ajouté', response.data.designvoiture + ' ajouté avec succès', 'success')
+          })
+          .catch((error) => {
+            console.error('Error adding new car:', error.message)
+          })
+      })
+      .catch((error) => {
+        console.error('Error adding new category:', error.message)
+      })
+  }
+
+  const addVoitureNewMarque = (newVoiture) => {
+    axios
+      .post('https://localhost:7001/api/Marques', newVoiture.marque)
+      .then((response) => {
+        console.log('New category added:', response.data)
+        newVoiture.marque.idmarque = response.data.idmarque
+        newVoiture.marque.designmarque = response.data.designmarque
+
+        axios
+          .post('https://localhost:7001/api/Voiture', newVoiture)
+          .then((response) => {
+            console.log('New car added:', response.data)
+            fetchAllCar()
+            Swal.fire('Ajouté', response.data.designvoiture + ' ajouté avec succès', 'success')
+          })
+          .catch((error) => {
+            console.error('Error adding new car:', error.message)
+          })
+      })
+      .catch((error) => {
+        console.error('Error adding new category:', error.message)
+      })
+  }
+
+  const addVoitureNewCategorieAndMarque = (newVoiture) => {
+    axios
+      .post('https://localhost:7001/api/Marques', newVoiture.marque)
+      .then((response) => {
+        console.log('New category added:', response.data)
+        newVoiture.marque.idmarque = response.data.idmarque
+        newVoiture.marque.designmarque = response.data.designmarque
+
+        axios
+          .post('https://localhost:7001/api/Categorie', newVoiture.categorie)
+          .then((response) => {
+            console.log('New category added:', response.data)
+            newVoiture.categorie.idcategorie = response.data.idcategorie
+            newVoiture.categorie.designcat = response.data.designcat
+
+            axios
+              .post('https://localhost:7001/api/Voiture', newVoiture)
+              .then((response) => {
+                console.log('New car added:', response.data)
+                fetchAllCar()
+                Swal.fire('Ajouté', response.data.designvoiture + ' ajouté avec succès', 'success')
+              })
+              .catch((error) => {
+                console.error('Error adding new car:', error.message)
+              })
+          })
+          .catch((error) => {
+            console.error('Error adding new category:', error.message)
+          })
+      })
+      .catch((error) => {
+        console.error('Error adding new category:', error.message)
       })
   }
 
@@ -44,7 +129,7 @@ export const VoitureProvider = ({ children }) => {
       .put(`https://localhost:7001/api/Voiture/${editedVoitureId}`, editedValues)
       .then((response) => {
         console.log('Client data updated:', response.data)
-        fetchAll()
+        fetchAllCar()
         Swal.fire('Modifié', 'Modification avec succès', 'success')
       })
       .catch((error) => {
@@ -57,16 +142,48 @@ export const VoitureProvider = ({ children }) => {
       .delete(`https://localhost:7001/api/Voiture/${deleteId}`)
       .then((response) => {
         console.log('Client data updated:', response.data)
-        fetchAll()
+        fetchAllCar()
       })
       .catch((error) => {
         console.error('Error updating client data:', error.message)
       })
   }
 
+  const buyCar = (buyData) => {
+    axios
+      .post('https://localhost:7001/api/Acheters', buyData)
+      .then((response) => {
+        console.log('New car added:', response.data)
+        axios
+          .put(`https://localhost:7001/api/Voiture/${buyData.voiture.numserie}`, buyData.voiture)
+          .then((response) => {
+            console.log('Client data updated:', response.data)
+            fetchAllCar()
+            fetchAll()
+            Swal.fire('Ajouté', 'Achat effectué avec succès', 'success')
+          })
+          .catch((error) => {
+            console.error('Error updating client data:', error.message)
+          })
+      })
+      .catch((error) => {
+        console.error('Error adding new car:', error.message)
+      })
+  }
+
   return (
     <VoitureContext.Provider
-      value={{ voitureData, records, updateVoiture, addVoiture, deleteVoiture }}
+      value={{
+        voitureData,
+        records,
+        updateVoiture,
+        addVoiture,
+        deleteVoiture,
+        buyCar,
+        addVoitureNewCategorie,
+        addVoitureNewMarque,
+        addVoitureNewCategorieAndMarque,
+      }}
     >
       {children}
     </VoitureContext.Provider>

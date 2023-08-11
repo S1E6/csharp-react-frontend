@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useAchatContext } from './AchatProvider'
+import { useVoitureContext } from './VoitureProvider'
 
 const ClientContext = createContext()
 
@@ -10,10 +12,10 @@ export const ClientProvider = ({ children }) => {
   const [records, setRecords] = useState([])
 
   useEffect(() => {
-    fetchAll()
+    fetchAllClient()
   }, [])
 
-  const fetchAll = () => {
+  const fetchAllClient = () => {
     axios
       .get('https://localhost:7001/api/Clients')
       .then((response) => {
@@ -30,7 +32,7 @@ export const ClientProvider = ({ children }) => {
       .put(`https://localhost:7001/api/Clients/${editedClientId}`, editedValues)
       .then((response) => {
         console.log('Client data updated:', response.data)
-        fetchAll()
+        fetchAllClient()
         Swal.fire('Modifié', 'Modification avec succès', 'success')
       })
       .catch((error) => {
@@ -43,7 +45,7 @@ export const ClientProvider = ({ children }) => {
       .post('https://localhost:7001/api/Clients', newClient)
       .then((response) => {
         console.log('New car added:', response.data)
-        fetchAll()
+        fetchAllClient()
         Swal.fire(
           'Ajouté',
           response.data.nom + response.data.prenoms + ' ajouté avec succès',
@@ -60,30 +62,15 @@ export const ClientProvider = ({ children }) => {
       .delete(`https://localhost:7001/api/Clients/${deleteID}`)
       .then((response) => {
         console.log('Client data updated:', response.data)
-        fetchAll()
+        fetchAllClient()
       })
       .catch((error) => {
         console.error('Error updating client data:', error.message)
       })
   }
 
-  const buyCar = (buyData) => {
-    axios
-      .post('https://localhost:7001/api/Acheters', buyData)
-      .then((response) => {
-        console.log('New car added:', response.data)
-        fetchAll()
-        Swal.fire('Ajouté', 'Achat effectué avec succès', 'success')
-      })
-      .catch((error) => {
-        console.error('Error adding new car:', error.message)
-      })
-  }
-
   return (
-    <ClientContext.Provider
-      value={{ clientData, records, updateClient, deleteClient, addClient, buyCar }}
-    >
+    <ClientContext.Provider value={{ clientData, records, updateClient, deleteClient, addClient }}>
       {children}
     </ClientContext.Provider>
   )
