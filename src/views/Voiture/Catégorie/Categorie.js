@@ -1,13 +1,15 @@
-import React from 'react'
-import { CButton, CCol, CRow, CFormInput } from '@coreui/react'
-import DataTable from 'react-data-table-component'
 import Swal from 'sweetalert2'
-import { useAchatContext } from '../../context/AchatProvider'
+import { CButton, CCol, CFormInput, CRow } from '@coreui/react'
+import DataTable from 'react-data-table-component'
+import React from 'react'
+import { useCategorieContext } from '../../../context/CategorieProvider'
+import { EditCat } from './EditCategorie'
+import { AddCategorie } from './AddCategorie'
 
-const Achat = () => {
-  const { achatData, deleteAchat } = useAchatContext()
+const Marque = () => {
+  const { categorieData, deleteCategorie } = useCategorieContext()
 
-  const handleDelete = (achat) => {
+  const handleDelete = (cat) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -18,16 +20,7 @@ const Achat = () => {
     swalWithBootstrapButtons
       .fire({
         title: 'Etes vous sûr?',
-        text:
-          "Voulez vous vraiment supprimer l'achat n°" +
-          achat.numachat +
-          ' du client : ' +
-          achat.client.idclient +
-          ' ' +
-          achat.client.nom +
-          ' ' +
-          achat.client.prenoms +
-          ' ?',
+        text: 'Voulez vous vraiment supprimer le' + cat.idcategorie + ' ' + cat.designcat + ' ?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Oui supprimer',
@@ -37,7 +30,7 @@ const Achat = () => {
       .then((result) => {
         if (result.isConfirmed) {
           swalWithBootstrapButtons.fire('Supprimé', 'Suppression avec succès', 'success')
-          deleteAchat(achat.numachat)
+          deleteCategorie(cat.idcategorie)
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire('Annulé', 'Supprission annulé :)', 'error')
         }
@@ -46,37 +39,20 @@ const Achat = () => {
 
   const columns = [
     {
-      name: 'Numéro',
-      selector: (row) => row.numachat,
+      name: 'Identifiant',
+      selector: (row) => row.idcategorie,
       sortable: true,
     },
     {
-      name: 'Client',
-      selector: (row) => row.client.idclient + ' ' + row.client.nom + ' ' + row.client.prenoms,
-    },
-    {
-      name: 'Voiture',
-      selector: (row) => row.voiture.numserie + ' ' + row.voiture.designvoiture,
-    },
-    {
-      name: 'Quatité',
-      selector: (row) => row.qte,
-    },
-    {
-      name: 'Somme',
-      selector: (row) => row.somme,
-    },
-    {
-      name: 'Reste',
-      selector: (row) => row.voiture.prix - row.somme,
+      name: 'Catégorie',
+      selector: (row) => row.designcat,
     },
     {
       name: 'Actions',
       width: '200px',
       cell: (row) => (
         <div>
-          {/*<EditModal row={row} />*/}
-          {/*<BuyModal row={row} />*/}
+          <EditCat row={row} />
           <CButton color="none" onClick={() => handleDelete(row)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <g fill="none">
@@ -97,15 +73,17 @@ const Achat = () => {
   return (
     <>
       <CRow>
-        <CCol xs={8}>{/*<VerticallyCentered />*/}</CCol>
+        <CCol xs={8}>
+          <AddCategorie />
+        </CCol>
         <CCol xs={4}>
           <CFormInput type="text" placeholder="Rechercher" />
         </CCol>
         <br />
         <br />
-        <DataTable columns={columns} data={achatData} fixedHeader pagination dense={false} />
+        <DataTable columns={columns} data={categorieData} fixedHeader pagination dense={false} />
       </CRow>
     </>
   )
 }
-export default Achat
+export default Marque

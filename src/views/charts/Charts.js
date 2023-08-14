@@ -22,18 +22,45 @@ const Charts = () => {
           content="React wrapper component for Chart.js 3.0, the most popular charting library."
         />
       </CCol>
-      <CCol xs={6}>
+      <CCol xs={10}>
         <CCard className="mb-4">
           <CCardHeader>Bar Chart</CCardHeader>
           <CCardBody>
             <CChartBar
               data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August'],
+                labels: [
+                  'January',
+                  'February',
+                  'March',
+                  'April',
+                  'May',
+                  'June',
+                  'July',
+                  'August',
+                  'February',
+                  'March',
+                  'April',
+                  'May',
+                  'June',
+                  'July',
+                  'August',
+                ],
                 datasets: [
                   {
-                    label: 'GitHub Commits',
-                    backgroundColor: '#f87979',
-                    data: [400000, 200000, 12000, 390000, 100000, 40000, 39000, 840000],
+                    label: "Chiffre d 'affaire",
+                    backgroundColor: '#0a0c72',
+                    data: [
+                      400000, 200000, 12000, 390000, 100000, 40000, 39000, 840000, 200000, 12000,
+                      390000, 100000, 40000, 39000, 840000,
+                    ],
+                  },
+                  {
+                    label: "Chiffre d 'affaire",
+                    backgroundColor: '#148860',
+                    data: [
+                      400000, 200000, 12000, 390000, 100000, 40000, 39000, 840000, 200000, 12000,
+                      390000, 100000, 40000, 39000, 840000,
+                    ],
                   },
                 ],
               }}
@@ -99,7 +126,7 @@ const Charts = () => {
                 labels: ['Red', 'Green', 'Yellow', 'Blue'],
                 datasets: [
                   {
-                    data: [300, 50, 100, 200],
+                    data: [3, 5, 1, 2],
                     backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#5FFFAD'],
                     hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#5FFFAD'],
                   },

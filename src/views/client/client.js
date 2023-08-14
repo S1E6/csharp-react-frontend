@@ -253,7 +253,6 @@ const Client = () => {
         </CCol>
         <br />
         <br />
-        <br />
         <DataTable columns={columns} data={clientData} fixedHeader pagination dense={false} />
       </CRow>
     </>

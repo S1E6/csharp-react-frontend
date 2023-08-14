@@ -13,7 +13,7 @@ import {
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 
-export const BuyModal = ({ row }) => {
+export const BuyModal = ({ row }, { count }) => {
   const [visible, setVisible] = useState(false)
   const [formData, setFormData] = useState({
     numachat: 'string',
@@ -49,7 +49,7 @@ export const BuyModal = ({ row }) => {
       },
     },
   })
-  const { updateVoiture, buyCar } = useVoitureContext()
+  const { buyCar } = useVoitureContext()
   const { clientData } = useClientContext()
 
   const save = () => {
@@ -207,4 +207,5 @@ BuyModal.propTypes = {
       },
     ],
   }).isRequired,
+  count: PropTypes.string.isRequired,
 }

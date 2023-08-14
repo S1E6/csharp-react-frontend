@@ -5,6 +5,8 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Client = React.lazy(() => import('./views/client/client'))
 const Voiture = React.lazy(() => import('./views/Voiture/Voiture'))
 const Achat = React.lazy(() => import('./views/Achat/Achat'))
+const Categorie = React.lazy(() => import('./views/Voiture/Catégorie/Categorie'))
+const Marque = React.lazy(() => import('./views/Voiture/Marque/Marque'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -58,7 +60,9 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/client', name: 'Client', element: Client },
-  { path: '/voitures', name: 'Voitures', element: Voiture },
+  { path: '/voitures/liste', name: 'Voitures', element: Voiture },
+  { path: '/voitures/categorie', name: 'Catégorie', element: Categorie },
+  { path: '/voitures/marque', name: 'Marque', element: Marque },
   { path: '/achat', name: 'Achat', element: Achat },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

@@ -114,7 +114,6 @@ const Voiture = () => {
         </CCol>
         <br />
         <br />
-        <br />
         <DataTable columns={columns} data={voitureData} fixedHeader pagination dense={false} />
       </CRow>
     </>
