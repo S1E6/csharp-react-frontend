@@ -11,6 +11,7 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CAlert,
 } from '@coreui/react'
 
 export const VerticallyCentered = () => {
@@ -26,8 +27,8 @@ export const VerticallyCentered = () => {
     designvoiture: '',
     prix: 0,
     img: 'string',
-    type: '',
-    boitevitesse: '',
+    type: 'Essence',
+    boitevitesse: 'Manuelle',
     status: 0,
     categorie: {
       idcategorie: '',
@@ -38,6 +39,7 @@ export const VerticallyCentered = () => {
       designmarque: '',
     },
   })
+  const [validationError, setValidationError] = useState(false)
   const {
     addVoiture,
     addVoitureNewCategorie,
@@ -66,10 +68,48 @@ export const VerticallyCentered = () => {
   }, [])
 
   const saveCar = () => {
-    if (isNewCategory && isNewCategory) addVoitureNewCategorieAndMarque(formData)
-    if (isNewCategory && !isNewMarque) addVoitureNewCategorie(formData)
-    if (!isNewCategory && isNewMarque) addVoitureNewMarque(formData)
-    if (!isNewMarque && !isNewCategory) addVoiture(formData)
+    if (validateForm()) {
+      if (isNewCategory && isNewMarque) addVoitureNewCategorieAndMarque(formData)
+      else if (isNewCategory && !isNewMarque) addVoitureNewCategorie(formData)
+      else if (!isNewCategory && isNewMarque) addVoitureNewMarque(formData)
+      else addVoiture(formData)
+      resetForm()
+      setVisible(false)
+    }
+  }
+
+  const validateForm = () => {
+    if (!formData.designvoiture || !formData.prix) {
+      setValidationError(true)
+      return false
+    }
+    if (isNewCategory) {
+      if (!formData.categorie.designcat) {
+        setValidationError(true)
+        return false
+      }
+    } else {
+      if (!formData.idcategorie) {
+        setValidationError(true)
+        return false
+      }
+    }
+    if (isNewMarque) {
+      if (!formData.marque.designmarque) {
+        setValidationError(true)
+        return false
+      }
+    } else {
+      if (!formData.idmarque) {
+        setValidationError(true)
+        return false
+      }
+    }
+    setValidationError(false)
+    return true
+  }
+
+  const resetForm = () => {
     setFormData({
       numserie: 'string',
       idcategorie: '',
@@ -77,8 +117,8 @@ export const VerticallyCentered = () => {
       designvoiture: '',
       prix: 0,
       img: 'string',
-      type: '',
-      boitevitesse: '',
+      type: 'Essence',
+      boitevitesse: 'Manuelle',
       status: 0,
       categorie: {
         idcategorie: '',
@@ -89,8 +129,6 @@ export const VerticallyCentered = () => {
         designmarque: '',
       },
     })
-    console.log(formData)
-    setVisible(false)
   }
 
   const handleInputChange = (event) => {
@@ -181,7 +219,7 @@ export const VerticallyCentered = () => {
           {isNewMarque ? (
             <CFormInput
               type="text"
-              name="idcategorie"
+              name="idmarque"
               value={formData.marque.designmarque}
               onChange={handleMarInputChange}
               label="Marque"
@@ -228,7 +266,7 @@ export const VerticallyCentered = () => {
           </CFormSelect>
           <br />
           <CFormInput
-            type="text"
+            type="number"
             name="prix"
             value={formData.prix}
             onChange={handleInputChange}
@@ -236,6 +274,9 @@ export const VerticallyCentered = () => {
             aria-label="default input example"
           />
           <br />
+          {validationError && (
+            <CAlert color="danger">Veuillez remplir tous les champs obligatoires.</CAlert>
+          )}
         </CModalBody>
         <CModalFooter>
           <CButton color="danger" onClick={() => setVisible(false)}>

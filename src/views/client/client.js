@@ -1,110 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import {
   CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
   CCol,
-  CLink,
   CModal,
   CModalBody,
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CPopover,
   CRow,
-  CTooltip,
-  CForm,
   CFormInput,
-  CFormLabel,
-  CFormTextarea,
-  CFormSelect,
+  CFormFeedback,
 } from '@coreui/react'
-import axios from 'axios'
 import Swal from 'sweetalert2'
 import DataTable from 'react-data-table-component'
-import PropTypes from 'prop-types'
 import { useClientContext } from '../../context/ClientProvider'
-const VerticallyCentered = ({ row }) => {
-  const [visible, setVisible] = useState(false)
-  const [editedValues, setEditedValues] = useState({
-    idclient: row.idclient,
-    nom: row.nom,
-    prenoms: row.prenoms,
-    adresse: row.adresse,
-    mail: row.mail,
-  })
-  const { updateClient } = useClientContext()
-  const updateClientData = () => {
-    updateClient(editedValues.idclient, editedValues)
-  }
-
-  return (
-    <>
-      <CButton color="none" onClick={() => setVisible(!visible)}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
-          <path
-            fill="currentColor"
-            d="M10.733 2.56a1.914 1.914 0 0 1 2.707 2.708l-.733.734l-2.708-2.708l.734-.733Zm-1.44 1.441L3.337 9.955a1.65 1.65 0 0 0-.398.644l-.914 2.743a.5.5 0 0 0 .632.633L5.4 13.06c.243-.08.463-.217.644-.398L12 6.709L9.292 4Z"
-          />
-        </svg>
-      </CButton>
-      <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
-        <CModalHeader>
-          <CModalTitle>Editer un client</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CFormInput
-            type="text"
-            label="Nom"
-            value={editedValues.nom}
-            onChange={(e) => setEditedValues({ ...editedValues, nom: e.target.value })}
-          />
-          <br />
-          <CFormInput
-            type="text"
-            label="Prenoms"
-            value={editedValues.prenoms}
-            onChange={(e) => setEditedValues({ ...editedValues, prenoms: e.target.value })}
-          />
-          <br />
-          <CFormInput
-            type="text"
-            label="Adresse"
-            value={editedValues.adresse}
-            onChange={(e) => setEditedValues({ ...editedValues, adresse: e.target.value })}
-          />
-          <br />
-          <CFormInput
-            type="text"
-            label="Mail"
-            value={editedValues.mail}
-            onChange={(e) => setEditedValues({ ...editedValues, mail: e.target.value })}
-          />
-          <br />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="danger" onClick={() => setVisible(false)}>
-            Annuler
-          </CButton>
-          <CButton color="success" onClick={updateClientData}>
-            Enregistrer
-          </CButton>
-        </CModalFooter>
-      </CModal>
-    </>
-  )
-}
-
-VerticallyCentered.propTypes = {
-  row: PropTypes.shape({
-    idclient: PropTypes.string.isRequired,
-    nom: PropTypes.string.isRequired,
-    prenoms: PropTypes.string.isRequired,
-    mail: PropTypes.string.isRequired,
-    adresse: PropTypes.string.isRequired,
-  }).isRequired,
-}
 
 const AddClient = () => {
   const [visible, setVisible] = useState(false)
@@ -115,9 +24,33 @@ const AddClient = () => {
     adresse: '',
     mail: '',
   })
+  const [validationErrors, setValidationErrors] = useState({
+    nom: false,
+    adresse: false,
+    mail: false,
+  })
   const { addClient } = useClientContext()
   const addClientData = () => {
-    addClient(formData)
+    const errors = {}
+
+    if (!formData.nom.trim()) {
+      errors.nom = true
+    }
+
+    if (!formData.adresse.trim()) {
+      errors.adresse = true
+    }
+
+    if (!formData.mail.trim()) {
+      errors.mail = true
+    }
+
+    if (Object.keys(errors).length === 0) {
+      addClient(formData)
+      setVisible(false)
+    } else {
+      setValidationErrors(errors)
+    }
   }
 
   return (
@@ -133,7 +66,11 @@ const AddClient = () => {
             label="Nom"
             value={formData.nom}
             onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+            invalid={validationErrors.nom}
           />
+          {validationErrors.nom && (
+            <CFormFeedback className="d-block">Nom est requis.</CFormFeedback>
+          )}
           <br />
           <CFormInput
             type="text"
@@ -147,14 +84,22 @@ const AddClient = () => {
             label="Adresse"
             value={formData.adresse}
             onChange={(e) => setFormData({ ...formData, adresse: e.target.value })}
+            invalid={validationErrors.adresse}
           />
+          {validationErrors.adresse && (
+            <CFormFeedback className="d-block">Adresse est requise.</CFormFeedback>
+          )}
           <br />
           <CFormInput
             type="text"
             label="Mail"
             value={formData.mail}
             onChange={(e) => setFormData({ ...formData, mail: e.target.value })}
+            invalid={validationErrors.mail}
           />
+          {validationErrors.mail && (
+            <CFormFeedback className="d-block">Mail est requis.</CFormFeedback>
+          )}
           <br />
         </CModalBody>
         <CModalFooter>
@@ -171,6 +116,44 @@ const AddClient = () => {
 }
 const Client = () => {
   const { clientData, deleteClient } = useClientContext()
+  const [searchText, setSearchText] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [visible, setVisible] = useState(false)
+  const [editedValues, setEditedValues] = useState(null)
+  const { updateClient } = useClientContext()
+  const [validationErrors, setValidationErrors] = useState({
+    nom: false,
+    adresse: false,
+    mail: false,
+  })
+
+  const updateClientData = () => {
+    const errors = {}
+
+    if (!editedValues.nom.trim()) {
+      errors.nom = true
+    }
+
+    if (!editedValues.adresse.trim()) {
+      errors.adresse = true
+    }
+
+    if (!editedValues.mail.trim()) {
+      errors.mail = true
+    }
+
+    if (Object.keys(errors).length === 0) {
+      updateClient(editedValues.idclient, editedValues)
+      setVisible(false)
+    } else {
+      setValidationErrors(errors)
+    }
+  }
+
+  const handleEdit = (row) => {
+    setVisible(true)
+    setEditedValues(row)
+  }
 
   const handleDelete = (client) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -204,6 +187,7 @@ const Client = () => {
     {
       name: 'Numéro Client',
       selector: (row) => row.idclient,
+      sortable: true,
     },
     {
       name: 'Nom',
@@ -225,7 +209,20 @@ const Client = () => {
       name: 'Actions',
       cell: (row) => (
         <div>
-          <VerticallyCentered row={row} />
+          <CButton
+            color="none"
+            onClick={() => {
+              setVisible(!visible)
+              handleEdit(row)
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+              <path
+                fill="currentColor"
+                d="M10.733 2.56a1.914 1.914 0 0 1 2.707 2.708l-.733.734l-2.708-2.708l.734-.733Zm-1.44 1.441L3.337 9.955a1.65 1.65 0 0 0-.398.644l-.914 2.743a.5.5 0 0 0 .632.633L5.4 13.06c.243-.08.463-.217.644-.398L12 6.709L9.292 4Z"
+              />
+            </svg>
+          </CButton>
           <CButton color="none" onClick={() => handleDelete(row)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <g fill="none">
@@ -242,6 +239,21 @@ const Client = () => {
       ignoreRowClick: true,
     },
   ]
+
+  const handleSearch = (text) => {
+    const filteredResults = clientData.filter(
+      (client) =>
+        client.idclient.toLowerCase().includes(text.toLowerCase()) ||
+        client.nom.toLowerCase().includes(text.toLowerCase()) ||
+        client.prenoms.toLowerCase().includes(text.toLowerCase()),
+    )
+    setSearchResults(filteredResults)
+  }
+
+  useEffect(() => {
+    handleSearch(searchText)
+  }, [clientData, searchText])
+
   return (
     <>
       <CRow>
@@ -249,12 +261,79 @@ const Client = () => {
           <AddClient />
         </CCol>
         <CCol xs={4}>
-          <CFormInput type="text" placeholder="Rechercher" />
+          <CFormInput
+            type="text"
+            placeholder="Rechercher"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
         </CCol>
-        <br />
-        <br />
-        <DataTable columns={columns} data={clientData} fixedHeader pagination dense={false} />
       </CRow>
+      <br />
+      <DataTable
+        columns={columns}
+        data={searchText.length > 0 ? searchResults : clientData}
+        fixedHeader
+        pagination
+        dense={false}
+      />
+      {editedValues && (
+        <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
+          <CModalHeader>
+            <CModalTitle>Editer un client</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CFormInput
+              type="text"
+              label="Nom"
+              value={editedValues.nom}
+              onChange={(e) => setEditedValues({ ...editedValues, nom: e.target.value })}
+              invalid={validationErrors.nom}
+            />
+            {validationErrors.nom && (
+              <CFormFeedback className="d-block">Nom est requis.</CFormFeedback>
+            )}
+            <br />
+            <CFormInput
+              type="text"
+              label="Prenoms"
+              value={editedValues.prenoms}
+              onChange={(e) => setEditedValues({ ...editedValues, prenoms: e.target.value })}
+            />
+            <br />
+            <CFormInput
+              type="text"
+              label="Adresse"
+              value={editedValues.adresse}
+              onChange={(e) => setEditedValues({ ...editedValues, adresse: e.target.value })}
+              invalid={validationErrors.adresse}
+            />
+            {validationErrors.adresse && (
+              <CFormFeedback className="d-block">Adresse est requise.</CFormFeedback>
+            )}
+            <br />
+            <CFormInput
+              type="text"
+              label="Mail"
+              value={editedValues.mail}
+              onChange={(e) => setEditedValues({ ...editedValues, mail: e.target.value })}
+              invalid={validationErrors.mail}
+            />
+            {validationErrors.mail && (
+              <CFormFeedback className="d-block">Mail est requis.</CFormFeedback>
+            )}
+            <br />
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="danger" onClick={() => setVisible(false)}>
+              Annuler
+            </CButton>
+            <CButton color="success" onClick={updateClientData}>
+              Enregistrer
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      )}
     </>
   )
 }

@@ -32,7 +32,7 @@ const Dashboard = () => {
   return (
     <>
       <CRow>
-        <CCol xs={8}>
+        <CCol xs={7}>
           <CCard className="mb-4">
             {/* eslint-disable-next-line react/no-unescaped-entities */}
             <CCardHeader>Chiffre d'affaires par moi</CCardHeader>
@@ -53,7 +53,7 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>
-        <CCol xs={4}>
+        <CCol xs={5}>
           <CCard className="mb-4">
             <CCardHeader>Nombres de voiture par marque</CCardHeader>
             <CCardBody>

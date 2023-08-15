@@ -10,10 +10,11 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CAlert,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 
-export const BuyModal = ({ row }, { count }) => {
+export const BuyModal = ({ row }) => {
   const [visible, setVisible] = useState(false)
   const [formData, setFormData] = useState({
     numachat: 'string',
@@ -51,11 +52,23 @@ export const BuyModal = ({ row }, { count }) => {
   })
   const { buyCar } = useVoitureContext()
   const { clientData } = useClientContext()
+  const [validationError, setValidationError] = useState(false)
 
   const save = () => {
-    buyCar(formData)
-    console.log(formData)
-    setVisible(false)
+    if (validateForm()) {
+      buyCar(formData)
+      console.log(formData)
+      setVisible(false)
+    }
+  }
+
+  const validateForm = () => {
+    if (!formData.idclient || !formData.somme) {
+      setValidationError(true)
+      return false
+    }
+    setValidationError(false)
+    return true
   }
 
   const handleInputChange = (event) => {
@@ -82,18 +95,6 @@ export const BuyModal = ({ row }, { count }) => {
     }))
   }
 
-  const handleMarInputChange = (event) => {
-    const { name, value } = event.target
-    setFormData((prevData) => ({
-      ...prevData,
-      idmarque: value,
-      marque: {
-        idmarque: value,
-        designmarque: 'string',
-      },
-    }))
-  }
-
   return (
     <>
       <CButton color="none" onClick={() => setVisible(!visible)}>
@@ -110,6 +111,9 @@ export const BuyModal = ({ row }, { count }) => {
           <CModalTitle>Acheter une voiture</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          {validationError && (
+            <CAlert color="danger">Veuillez remplir tous les champs obligatoires.</CAlert>
+          )}
           <CFormSelect
             name="idclient"
             value={formData.client.idclient}
@@ -146,15 +150,6 @@ export const BuyModal = ({ row }, { count }) => {
             value={formData.voiture.prix}
             onChange={handleInputChange}
             label="Prix"
-            aria-label="default input example"
-          />
-          <br />
-          <CFormInput
-            type="text"
-            name="qte"
-            value={formData.qte}
-            onChange={handleInputChange}
-            label="Quantité"
             aria-label="default input example"
           />
           <br />
@@ -207,5 +202,6 @@ BuyModal.propTypes = {
       },
     ],
   }).isRequired,
-  count: PropTypes.string.isRequired,
 }
+
+export default BuyModal
