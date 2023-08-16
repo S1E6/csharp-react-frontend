@@ -221,6 +221,7 @@ export const VoitureProvider = ({ children }) => {
         addVoitureNewCategorie,
         addVoitureNewMarque,
         addVoitureNewCategorieAndMarque,
+        fetchAllCar,
       }}
     >
       {children}
