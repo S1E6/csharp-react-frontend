@@ -7,6 +7,7 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CAlert,
 } from '@coreui/react'
 import { useMarkContext } from '../../../context/MarqueProvider'
 
@@ -16,6 +17,7 @@ export const AddMarque = () => {
     idmarque: '',
     designmarque: '',
   })
+  const [validationError, setValidationError] = useState(false) // State for showing validation error
   const { addMarque } = useMarkContext()
 
   const handleInputChange = (event) => {
@@ -25,9 +27,14 @@ export const AddMarque = () => {
       [name]: value,
     }))
   }
+
   const saveChange = (event) => {
-    addMarque(formData)
-    setVisible(false)
+    if (formData.designmarque.trim() === '') {
+      setValidationError(true)
+    } else {
+      addMarque(formData)
+      setVisible(false)
+    }
   }
 
   return (
@@ -38,12 +45,13 @@ export const AddMarque = () => {
           <CModalTitle>Ajouter une voiture</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          {validationError && <CAlert color="danger">Le champ Modèle est requis.</CAlert>}
           <CFormInput
             type="text"
             name="designmarque"
             value={formData.designmarque}
             onChange={handleInputChange}
-            label="Modéle"
+            label="Modèle"
             aria-label="default input example"
             required
           />

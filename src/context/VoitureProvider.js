@@ -20,6 +20,14 @@ export const VoitureProvider = ({ children }) => {
       .get('https://localhost:7001/api/Voiture')
       .then((response) => {
         setVoitureData(response.data)
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error.message)
+      })
+    axios
+      .get('https://localhost:7001/api/Voiture/vendue')
+      .then((response) => {
         setRecords(response.data)
         console.log(response.data)
       })
@@ -151,23 +159,53 @@ export const VoitureProvider = ({ children }) => {
 
   const buyCar = (buyData) => {
     axios
-      .post('https://localhost:7001/api/Acheters', buyData)
+      .get(`https://localhost:7001/api/Clients/${buyData.client.idclient}`)
       .then((response) => {
-        console.log('New car added:', response.data)
+        const clientData = response.data
         axios
-          .put(`https://localhost:7001/api/Voiture/${buyData.voiture.numserie}`, buyData.voiture)
+          .post('https://localhost:7001/api/Acheters', buyData)
           .then((response) => {
-            console.log('Client data updated:', response.data)
-            fetchAllCar()
-            fetchAll()
-            Swal.fire('Ajouté', 'Achat effectué avec succès', 'success')
+            console.log('New car added:', response.data)
+            axios
+              .put(
+                `https://localhost:7001/api/Voiture/${buyData.voiture.numserie}`,
+                buyData.voiture,
+              )
+              .then((response) => {
+                console.log('Client data updated:', response.data)
+                fetchAllCar()
+                fetchAll()
+                console.log('clientData', clientData)
+                const emailData = {
+                  adresseDestinataire: clientData[0].mail,
+                  somme: buyData.somme,
+                  dateAchat: buyData.dateAchat,
+                  client: clientData[0].nom + ' ' + clientData[0].prenoms,
+                  voiture: buyData.voiture.designvoiture,
+                }
+                console.log('email data', emailData)
+                axios
+                  .post('https://localhost:7001/api/Email/send', emailData)
+                  .then((response) => {
+                    console.log('Email sent:', response.data)
+                    Swal.fire('Ajouté', 'Achat effectué avec succès et mail envoyé', 'success')
+                  })
+                  .catch((error) => {
+                    console.error('Error sending email:', error.message)
+                  })
+
+                Swal.fire('Ajouté', 'Achat effectué avec succès', 'success')
+              })
+              .catch((error) => {
+                console.error('Error updating client data:', error.message)
+              })
           })
           .catch((error) => {
-            console.error('Error updating client data:', error.message)
+            console.error('Error adding new car:', error.message)
           })
       })
       .catch((error) => {
-        console.error('Error adding new car:', error.message)
+        console.error('Error fetching client data:', error.message)
       })
   }
 

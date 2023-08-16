@@ -1,13 +1,25 @@
 import Swal from 'sweetalert2'
-import { CButton, CCol, CFormInput, CRow } from '@coreui/react'
+import {
+  CAlert,
+  CButton,
+  CCol,
+  CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CRow,
+} from '@coreui/react'
 import DataTable from 'react-data-table-component'
-import React from 'react'
+import React, { useState } from 'react'
 import { useCategorieContext } from '../../../context/CategorieProvider'
-import { EditCat } from './EditCategorie'
 import { AddCategorie } from './AddCategorie'
 
-const Marque = () => {
+const Categorie = () => {
   const { categorieData, deleteCategorie } = useCategorieContext()
+  const [visible, setVisible] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const handleDelete = (cat) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -37,6 +49,28 @@ const Marque = () => {
       })
   }
 
+  const [formData, setFormData] = useState()
+  const [validationError, setValidationError] = useState(false) // State for validation error
+  const { updateCategorie } = useCategorieContext()
+
+  const saveChange = () => {
+    if (!formData.designcat) {
+      setValidationError(true)
+    } else {
+      setValidationError(false)
+      updateCategorie(formData.idcategorie, formData)
+      setVisible(false)
+    }
+  }
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
   const columns = [
     {
       name: 'Identifiant',
@@ -52,7 +86,23 @@ const Marque = () => {
       width: '200px',
       cell: (row) => (
         <div>
-          <EditCat row={row} />
+          <CButton
+            color="none"
+            onClick={() => {
+              setFormData({
+                idcategorie: row.idcategorie,
+                designcat: row.designcat,
+              })
+              setVisible(!visible)
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+              <path
+                fill="currentColor"
+                d="M10.733 2.56a1.914 1.914 0 0 1 2.707 2.708l-.733.734l-2.708-2.708l.734-.733Zm-1.44 1.441L3.337 9.955a1.65 1.65 0 0 0-.398.644l-.914 2.743a.5.5 0 0 0 .632.633L5.4 13.06c.243-.08.463-.217.644-.398L12 6.709L9.292 4Z"
+              />
+            </svg>
+          </CButton>
           <CButton color="none" onClick={() => handleDelete(row)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <g fill="none">
@@ -70,6 +120,10 @@ const Marque = () => {
     },
   ]
 
+  const filteredData = categorieData.filter((row) =>
+    row.designcat.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
+
   return (
     <>
       <CRow>
@@ -77,13 +131,47 @@ const Marque = () => {
           <AddCategorie />
         </CCol>
         <CCol xs={4}>
-          <CFormInput type="text" placeholder="Rechercher" />
+          <CFormInput
+            type="text"
+            placeholder="Rechercher"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </CCol>
         <br />
         <br />
-        <DataTable columns={columns} data={categorieData} fixedHeader pagination dense={false} />
+        <DataTable columns={columns} data={filteredData} fixedHeader pagination dense={false} />
+        {visible && (
+          <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
+            <CModalHeader>
+              <CModalTitle>Editer un marque</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              {validationError && ( // Display the error message if validationError is true
+                <CAlert color="danger">Le champ Marque est requis.</CAlert>
+              )}
+              <CFormInput
+                type="text"
+                name="designcat"
+                value={formData.designcat}
+                onChange={handleInputChange}
+                label="Marque"
+                aria-label="default input example"
+              />
+              <br />
+            </CModalBody>
+            <CModalFooter>
+              <CButton color="danger" onClick={() => setVisible(false)}>
+                Annuler
+              </CButton>
+              <CButton color="success" onClick={saveChange}>
+                Enregistrer
+              </CButton>
+            </CModalFooter>
+          </CModal>
+        )}
       </CRow>
     </>
   )
 }
-export default Marque
+export default Categorie

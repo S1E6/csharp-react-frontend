@@ -7,6 +7,7 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CAlert, // Import the CAlert component
 } from '@coreui/react'
 import { useCategorieContext } from '../../../context/CategorieProvider'
 
@@ -16,6 +17,7 @@ export const AddCategorie = () => {
     idcategorie: '',
     designcat: '',
   })
+  const [validationError, setValidationError] = useState(false) // State for validation error
   const { addCategorie } = useCategorieContext()
 
   const handleInputChange = (event) => {
@@ -25,9 +27,15 @@ export const AddCategorie = () => {
       [name]: value,
     }))
   }
-  const saveChange = (event) => {
-    addCategorie(formData)
-    setVisible(false)
+
+  const saveChange = () => {
+    if (!formData.designcat) {
+      setValidationError(true)
+    } else {
+      setValidationError(false)
+      addCategorie(formData)
+      setVisible(false)
+    }
   }
 
   return (
@@ -38,6 +46,9 @@ export const AddCategorie = () => {
           <CModalTitle>Ajouter une catégorie</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          {validationError && ( // Display the error message if validationError is true
+            <CAlert color="danger">Le champ Catégorie est requis.</CAlert>
+          )}
           <CFormInput
             type="text"
             name="designcat"

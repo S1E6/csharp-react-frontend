@@ -39,15 +39,44 @@ export const AchatProvider = ({ children }) => {
       })
   }
 
-  const deleteAchat = (deleteID) => {
+  const deleteAchat = (achat) => {
+    console.log(achat)
+    const newVoiture = {
+      numserie: achat.voiture.numserie || 'string',
+      idcategorie: achat.voiture.idcategorie || 'string',
+      idmarque: achat.voiture.idmarque || 'string',
+      designvoiture: achat.voiture.designvoiture || 'string',
+      prix: achat.voiture.prix || 0,
+      img: achat.voiture.img || 'string',
+      type: achat.voiture.type || 'string',
+      boitevitesse: achat.voiture.boitevitesse || 'string',
+      status: 0,
+      categorie: {
+        idcategorie: achat.voiture.idcategorie || 'string',
+        designcat: achat.voiture.categorie?.designcat || 'string',
+      },
+      marque: {
+        idmarque: achat.voiture.idmarque || 'string',
+        designmarque: achat.voiture.marque?.designmarque || 'string',
+      },
+    }
     axios
-      .delete(`https://localhost:7001/api/Acheters/${deleteID}`)
+      .put(`https://localhost:7001/api/Voiture/${achat.voiture.numserie}`, newVoiture)
       .then((response) => {
-        console.log('Achat deleted:', response.data)
-        fetchAll()
+        console.log('Client data updated:', response.data)
+        axios
+          .delete(`https://localhost:7001/api/Acheters/${achat.numachat}`)
+          .then((response) => {
+            console.log('Achat deleted:', response.data)
+            fetchAll()
+            Swal.fire('Annulé', 'Achat annulé avec succès', 'success')
+          })
+          .catch((error) => {
+            console.error('Error deleting achat data:', error.message)
+          })
       })
       .catch((error) => {
-        console.error('Error deleting achat data:', error.message)
+        console.error('Error updating client data:', error.message)
       })
   }
 
