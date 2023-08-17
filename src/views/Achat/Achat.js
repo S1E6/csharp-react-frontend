@@ -33,8 +33,8 @@ const Achat = () => {
           ' ?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Oui supprimer',
-        cancelButtonText: 'Non, annuler',
+        confirmButtonText: 'Oui, annuler',
+        cancelButtonText: 'Non',
         reverseButtons: true,
       })
       .then((result) => {

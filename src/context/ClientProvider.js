@@ -48,7 +48,7 @@ export const ClientProvider = ({ children }) => {
         fetchAllClient()
         Swal.fire(
           'Ajouté',
-          response.data.nom + response.data.prenoms + ' ajouté avec succès',
+          response.data.nom + ' ' + response.data.prenoms + ' ajouté avec succès',
           'success',
         )
       })

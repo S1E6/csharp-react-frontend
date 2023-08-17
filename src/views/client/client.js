@@ -48,6 +48,12 @@ const AddClient = () => {
     if (Object.keys(errors).length === 0) {
       addClient(formData)
       setVisible(false)
+      setFormData({
+        nom: '',
+        prenoms: '',
+        adresse: '',
+        mail: '',
+      })
     } else {
       setValidationErrors(errors)
     }
@@ -58,7 +64,7 @@ const AddClient = () => {
       <CButton onClick={() => setVisible(!visible)}>Ajouter</CButton>
       <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
         <CModalHeader>
-          <CModalTitle>Editer un client</CModalTitle>
+          <CModalTitle>Ajouter un client</CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CFormInput

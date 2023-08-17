@@ -42,16 +42,16 @@ export const AddMarque = () => {
       <CButton onClick={() => setVisible(!visible)}>Ajouter</CButton>
       <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
         <CModalHeader>
-          <CModalTitle>Ajouter une voiture</CModalTitle>
+          <CModalTitle>Ajouter une Marque</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          {validationError && <CAlert color="danger">Le champ Modèle est requis.</CAlert>}
+          {validationError && <CAlert color="danger">Le champ Marque est requis.</CAlert>}
           <CFormInput
             type="text"
             name="designmarque"
             value={formData.designmarque}
             onChange={handleInputChange}
-            label="Modèle"
+            label="Marque"
             aria-label="default input example"
             required
           />
