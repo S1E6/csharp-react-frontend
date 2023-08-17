@@ -35,15 +35,15 @@ const Dashboard = () => {
         <CCol xs={7}>
           <CCard className="mb-4">
             {/* eslint-disable-next-line react/no-unescaped-entities */}
-            <CCardHeader>Chiffre d'affaires par moi</CCardHeader>
+            <CCardHeader>Chiffre d'affaires par moi en ariary</CCardHeader>
             <CCardBody>
               <CChartBar
                 data={{
                   labels: graphBarData.months,
                   datasets: [
                     {
-                      label: "Chiffre d 'affaire",
-                      backgroundColor: '#0a0c72',
+                      label: "Chiffre d 'affaire ",
+                      backgroundColor: '#2676FF',
                       data: graphBarData.data,
                     },
                   ],
@@ -64,24 +64,22 @@ const Dashboard = () => {
                     {
                       data: graphPieData.data,
                       backgroundColor: [
-                        '#5c0370',
-                        '#064065',
-                        '#FFCE56',
-                        '#034f27',
-                        '#061956',
-                        '#810c0c',
-                        '#056735',
-                        '#a24e0c',
+                        '#F51DAF',
+                        '#FFA533',
+                        '#7839E6',
+                        '#2676FF',
+                        '#F56838',
+                        '#009740',
+                        '#F5D038',
                       ],
                       hoverBackgroundColor: [
-                        '#5c0370',
-                        '#064065',
-                        '#FFCE56',
-                        '#034f27',
-                        '#061956',
-                        '#810c0c',
-                        '#056735',
-                        '#a24e0c',
+                        '#F51DAF',
+                        '#FFA533',
+                        '#7839E6',
+                        '#2676FF',
+                        '#F56838',
+                        '#009740',
+                        '#F5D038',
                       ],
                     },
                   ],
