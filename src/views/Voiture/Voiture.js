@@ -350,7 +350,7 @@ const Voiture = () => {
   useEffect(() => {
     handleSearch(searchText)
     axios
-      .get('https://localhost:7001/api/Categorie')
+      .get('http://localhost:7001/api/Categorie')
       .then((response) => {
         setCategories(response.data)
       })
@@ -359,7 +359,7 @@ const Voiture = () => {
       })
 
     axios
-      .get('https://localhost:7001/api/Marques')
+      .get('http://localhost:7001/api/Marques')
       .then((response) => {
         setMarques(response.data)
       })

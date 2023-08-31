@@ -15,7 +15,7 @@ export const CategorieProvider = ({ children }) => {
 
   const fetchAllCat = () => {
     axios
-      .get('https://localhost:7001/api/Categorie')
+      .get('http://localhost:7001/api/Categorie')
       .then((response) => {
         setCategorieData(response.data)
         setRecords(response.data)
@@ -28,7 +28,7 @@ export const CategorieProvider = ({ children }) => {
 
   const addCategorie = (addMark) => {
     axios
-      .post(`https://localhost:7001/api/Categorie`, addMark)
+      .post(`http://localhost:7001/api/Categorie`, addMark)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllCat()
@@ -41,7 +41,7 @@ export const CategorieProvider = ({ children }) => {
 
   const updateCategorie = (editedMarqueId, editMarque) => {
     axios
-      .put(`https://localhost:7001/api/Categorie/${editedMarqueId}`, editMarque)
+      .put(`http://localhost:7001/api/Categorie/${editedMarqueId}`, editMarque)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllCat()
@@ -54,7 +54,7 @@ export const CategorieProvider = ({ children }) => {
 
   const deleteCategorie = (deleteID) => {
     axios
-      .delete(`https://localhost:7001/api/Categorie/${deleteID}`)
+      .delete(`http://localhost:7001/api/Categorie/${deleteID}`)
       .then((response) => {
         console.log('Achat deleted:', response.data)
         fetchAllCat()

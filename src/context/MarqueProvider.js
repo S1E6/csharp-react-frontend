@@ -15,7 +15,7 @@ export const MarqueProvider = ({ children }) => {
 
   const fetchAllMark = () => {
     axios
-      .get('https://localhost:7001/api/Marques')
+      .get('http://localhost:7001/api/Marques')
       .then((response) => {
         setMarqueData(response.data)
         setRecords(response.data)
@@ -28,7 +28,7 @@ export const MarqueProvider = ({ children }) => {
 
   const addMarque = (addMark) => {
     axios
-      .post(`https://localhost:7001/api/Marques`, addMark)
+      .post(`http://localhost:7001/api/Marques`, addMark)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllMark()
@@ -41,7 +41,7 @@ export const MarqueProvider = ({ children }) => {
 
   const updateMarque = (editedMarqueId, editMarque) => {
     axios
-      .put(`https://localhost:7001/api/Marques/${editedMarqueId}`, editMarque)
+      .put(`http://localhost:7001/api/Marques/${editedMarqueId}`, editMarque)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllMark()
@@ -54,7 +54,7 @@ export const MarqueProvider = ({ children }) => {
 
   const deleteMarque = (deleteID) => {
     axios
-      .delete(`https://localhost:7001/api/Marques/${deleteID}`)
+      .delete(`http://localhost:7001/api/Marques/${deleteID}`)
       .then((response) => {
         console.log('Achat deleted:', response.data)
         fetchAllMark()

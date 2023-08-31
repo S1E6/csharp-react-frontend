@@ -49,7 +49,7 @@ export const VerticallyCentered = () => {
 
   useEffect(() => {
     axios
-      .get('https://localhost:7001/api/Categorie')
+      .get('http://localhost:7001/api/Categorie')
       .then((response) => {
         setCategories(response.data)
       })
@@ -58,7 +58,7 @@ export const VerticallyCentered = () => {
       })
 
     axios
-      .get('https://localhost:7001/api/Marques')
+      .get('http://localhost:7001/api/Marques')
       .then((response) => {
         setMarques(response.data)
       })

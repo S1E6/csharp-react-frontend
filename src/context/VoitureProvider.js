@@ -17,7 +17,7 @@ export const VoitureProvider = ({ children }) => {
 
   const fetchAllCar = () => {
     axios
-      .get('https://localhost:7001/api/Voiture')
+      .get('http://localhost:7001/api/Voiture')
       .then((response) => {
         setVoitureData(response.data)
         console.log(response.data)
@@ -26,7 +26,7 @@ export const VoitureProvider = ({ children }) => {
         console.error('Error fetching data:', error.message)
       })
     axios
-      .get('https://localhost:7001/api/Voiture/vendue')
+      .get('http://localhost:7001/api/Voiture/vendue')
       .then((response) => {
         setRecords(response.data)
         console.log(response.data)
@@ -38,7 +38,7 @@ export const VoitureProvider = ({ children }) => {
 
   const addVoiture = (newVoiture) => {
     axios
-      .post('https://localhost:7001/api/Voiture', newVoiture)
+      .post('http://localhost:7001/api/Voiture', newVoiture)
       .then((response) => {
         console.log('New car added:', response.data)
         fetchAllCar()
@@ -51,14 +51,14 @@ export const VoitureProvider = ({ children }) => {
 
   const addVoitureNewCategorie = (newVoiture) => {
     axios
-      .post('https://localhost:7001/api/Categorie', newVoiture.categorie)
+      .post('http://localhost:7001/api/Categorie', newVoiture.categorie)
       .then((response) => {
         console.log('New category added:', response.data)
         newVoiture.categorie.idcategorie = response.data.idcategorie
         newVoiture.categorie.designcat = response.data.designcat
 
         axios
-          .post('https://localhost:7001/api/Voiture', newVoiture)
+          .post('http://localhost:7001/api/Voiture', newVoiture)
           .then((response) => {
             console.log('New car added:', response.data)
             fetchAllCar()
@@ -75,14 +75,14 @@ export const VoitureProvider = ({ children }) => {
 
   const addVoitureNewMarque = (newVoiture) => {
     axios
-      .post('https://localhost:7001/api/Marques', newVoiture.marque)
+      .post('http://localhost:7001/api/Marques', newVoiture.marque)
       .then((response) => {
         console.log('New category added:', response.data)
         newVoiture.marque.idmarque = response.data.idmarque
         newVoiture.marque.designmarque = response.data.designmarque
 
         axios
-          .post('https://localhost:7001/api/Voiture', newVoiture)
+          .post('http://localhost:7001/api/Voiture', newVoiture)
           .then((response) => {
             console.log('New car added:', response.data)
             fetchAllCar()
@@ -99,21 +99,21 @@ export const VoitureProvider = ({ children }) => {
 
   const addVoitureNewCategorieAndMarque = (newVoiture) => {
     axios
-      .post('https://localhost:7001/api/Marques', newVoiture.marque)
+      .post('http://localhost:7001/api/Marques', newVoiture.marque)
       .then((response) => {
         console.log('New category added:', response.data)
         newVoiture.marque.idmarque = response.data.idmarque
         newVoiture.marque.designmarque = response.data.designmarque
 
         axios
-          .post('https://localhost:7001/api/Categorie', newVoiture.categorie)
+          .post('http://localhost:7001/api/Categorie', newVoiture.categorie)
           .then((response) => {
             console.log('New category added:', response.data)
             newVoiture.categorie.idcategorie = response.data.idcategorie
             newVoiture.categorie.designcat = response.data.designcat
 
             axios
-              .post('https://localhost:7001/api/Voiture', newVoiture)
+              .post('http://localhost:7001/api/Voiture', newVoiture)
               .then((response) => {
                 console.log('New car added:', response.data)
                 fetchAllCar()
@@ -134,7 +134,7 @@ export const VoitureProvider = ({ children }) => {
 
   const updateVoiture = (editedVoitureId, editedValues) => {
     axios
-      .put(`https://localhost:7001/api/Voiture/${editedVoitureId}`, editedValues)
+      .put(`http://localhost:7001/api/Voiture/${editedVoitureId}`, editedValues)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllCar()
@@ -147,7 +147,7 @@ export const VoitureProvider = ({ children }) => {
 
   const deleteVoiture = (deleteId) => {
     axios
-      .delete(`https://localhost:7001/api/Voiture/${deleteId}`)
+      .delete(`http://localhost:7001/api/Voiture/${deleteId}`)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllCar()
@@ -159,18 +159,15 @@ export const VoitureProvider = ({ children }) => {
 
   const buyCar = (buyData) => {
     axios
-      .get(`https://localhost:7001/api/Clients/${buyData.client.idclient}`)
+      .get(`http://localhost:7001/api/Clients/${buyData.client.idclient}`)
       .then((response) => {
         const clientData = response.data
         axios
-          .post('https://localhost:7001/api/Acheters', buyData)
+          .post('http://localhost:7001/api/Acheters', buyData)
           .then((response) => {
             console.log('New car added:', response.data)
             axios
-              .put(
-                `https://localhost:7001/api/Voiture/${buyData.voiture.numserie}`,
-                buyData.voiture,
-              )
+              .put(`http://localhost:7001/api/Voiture/${buyData.voiture.numserie}`, buyData.voiture)
               .then((response) => {
                 console.log('Client data updated:', response.data)
                 fetchAllCar()
@@ -185,7 +182,7 @@ export const VoitureProvider = ({ children }) => {
                 }
                 console.log('email data', emailData)
                 axios
-                  .post('https://localhost:7001/api/Email/send', emailData)
+                  .post('http://localhost:7001/api/Email/send', emailData)
                   .then((response) => {
                     console.log('Email sent:', response.data)
                     Swal.fire('Ajouté', 'Achat effectué avec succès et mail envoyé', 'success')

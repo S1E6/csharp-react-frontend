@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios
-      .get('https://localhost:7001/api/Graph/argent-par-mois')
+      .get('http://localhost:7001/api/Graph/argent-par-mois')
       .then((response) => {
         setgraphBarData(response.data)
       })
@@ -20,7 +20,7 @@ const Dashboard = () => {
       })
 
     axios
-      .get('https://localhost:7001/api/Graph/marques-sommes-voitures')
+      .get('http://localhost:7001/api/Graph/marques-sommes-voitures')
       .then((response) => {
         setgraphPieData(response.data)
       })

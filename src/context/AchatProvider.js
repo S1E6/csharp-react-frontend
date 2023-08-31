@@ -15,7 +15,7 @@ export const AchatProvider = ({ children }) => {
 
   const fetchAll = () => {
     axios
-      .get('https://localhost:7001/api/Acheters')
+      .get('http://localhost:7001/api/Acheters')
       .then((response) => {
         setAchatData(response.data)
         setRecords(response.data)
@@ -28,7 +28,7 @@ export const AchatProvider = ({ children }) => {
 
   const updateAchat = (editedAchatId, editAchat) => {
     axios
-      .put(`https://localhost:7001/api/Acheters/${editedAchatId}`, editAchat)
+      .put(`http://localhost:7001/api/Acheters/${editedAchatId}`, editAchat)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAll()
@@ -61,11 +61,11 @@ export const AchatProvider = ({ children }) => {
       },
     }
     axios
-      .put(`https://localhost:7001/api/Voiture/${achat.voiture.numserie}`, newVoiture)
+      .put(`http://localhost:7001/api/Voiture/${achat.voiture.numserie}`, newVoiture)
       .then((response) => {
         console.log('Client data updated:', response.data)
         axios
-          .delete(`https://localhost:7001/api/Acheters/${achat.numachat}`)
+          .delete(`http://localhost:7001/api/Acheters/${achat.numachat}`)
           .then((response) => {
             console.log('Achat deleted:', response.data)
             fetchAll()

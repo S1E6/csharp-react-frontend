@@ -17,7 +17,7 @@ export const ClientProvider = ({ children }) => {
 
   const fetchAllClient = () => {
     axios
-      .get('https://localhost:7001/api/Clients')
+      .get('http://localhost:7001/api/Clients')
       .then((response) => {
         setClientData(response.data)
         setRecords(response.data)
@@ -29,7 +29,7 @@ export const ClientProvider = ({ children }) => {
 
   const updateClient = (editedClientId, editedValues) => {
     axios
-      .put(`https://localhost:7001/api/Clients/${editedClientId}`, editedValues)
+      .put(`http://localhost:7001/api/Clients/${editedClientId}`, editedValues)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllClient()
@@ -42,7 +42,7 @@ export const ClientProvider = ({ children }) => {
 
   const addClient = (newClient) => {
     axios
-      .post('https://localhost:7001/api/Clients', newClient)
+      .post('http://localhost:7001/api/Clients', newClient)
       .then((response) => {
         console.log('New car added:', response.data)
         fetchAllClient()
@@ -59,7 +59,7 @@ export const ClientProvider = ({ children }) => {
 
   const deleteClient = (deleteID) => {
     axios
-      .delete(`https://localhost:7001/api/Clients/${deleteID}`)
+      .delete(`http://localhost:7001/api/Clients/${deleteID}`)
       .then((response) => {
         console.log('Client data updated:', response.data)
         fetchAllClient()

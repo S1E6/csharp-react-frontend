@@ -56,7 +56,7 @@ const Achat = () => {
     }
 
     axios
-      .post('https://localhost:7001/api/Pdf/generate', pdfData)
+      .post('http://localhost:7001/api/Pdf/generate', pdfData)
       .then((response) => {
         Swal.fire('Généré', 'PDF généré avec succès', 'success')
         console.log('PDF généré avec succès:', response.data)
